@@ -55,11 +55,9 @@ There is no `synapt/__init__.py` by design. This allows the future package to
 coexist with the existing `synapt` namespace without forcing a shared release
 unit.
 
-Current gripspace caveat: the installed recall checkout may still present
-`synapt` as a regular package during local tests. The test suite uses a
-local-only `tests/conftest.py` path bridge until the parallel recall PEP 420
-conversion lands. After that merge, remove the bridge and verify
-`synapt.recall` and `synapt.runner` coexist from installed packages.
+Coexistence verification is part of the release gate: install `synapt` and
+`synapt-runner` into the same environment, then import `synapt.recall` and
+`synapt.runner` without mutating `synapt.__path__`.
 
 ## Run Tests
 
