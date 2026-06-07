@@ -20,9 +20,11 @@ from .hashing import canonical_json, canonical_sha256, deterministic_seed
 from .modal import (
     DEFAULT_GPU_COST_RATES,
     DashboardCostReconciliation,
+    GenerationCostSurface,
     GpuCostRate,
     ModalBinding,
     ModalRuntimeSpec,
+    ModalWallClockCostSurface,
     build_modal_binding,
 )
 from .prereg import MethodGate, PreregistrationError, assert_method_allowed
@@ -53,6 +55,7 @@ __all__ = [
     "GateExecution",
     "GateFailed",
     "GateResult",
+    "GenerationCostSurface",
     "GeneratedCallCounter",
     "GpuCostRate",
     "JsonlWriter",
@@ -61,6 +64,7 @@ __all__ = [
     "MethodGate",
     "ModalBinding",
     "ModalRuntimeSpec",
+    "ModalWallClockCostSurface",
     "PreregistrationError",
     "RecordStatus",
     "RenderMode",

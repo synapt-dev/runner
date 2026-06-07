@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Mapping
 
+from .modal import GenerationCostSurface
+
 
 class RecordStatus(StrEnum):
     PROMPT_QUALITY_SUCCESS = "PROMPT_QUALITY_SUCCESS"
@@ -33,6 +35,7 @@ class RunRecord:
     record_status: RecordStatus
     prompt_record: Mapping[str, Any] | None = None
     quality_record: Mapping[str, Any] | None = None
+    generation_cost: GenerationCostSurface | None = None
     failure: FailureRecord | None = None
     metadata: Mapping[str, Any] = field(default_factory=dict)
 

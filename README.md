@@ -19,6 +19,8 @@ The kernel contains generic research-runner infrastructure that can be reused by
 - pre-execution gates that fail closed before model generation
 - stable-unit span delete and mask rendering
 - Modal runtime metadata, GPU cost rates, and dashboard-cost reconciliation
+- distinct cost surfaces for per-row model generation cost and Modal wall-clock
+  app billing
 - JSONL/local artifact sinks and markdown summary hooks
 - wave fanout with per-cell failure capture
 - preregistration method/version gates
@@ -26,6 +28,19 @@ The kernel contains generic research-runner infrastructure that can be reused by
 The kernel intentionally does not include SEMU primitives, vorn scoring,
 fixture loaders, selector policies, benchmark scoring, product claims, or model
 execution code. Those remain project-specific.
+
+## Cost Surfaces
+
+Runner artifacts keep two cost surfaces separate:
+
+- `GenerationCostSurface` is row-scoped model generation cost. It may carry
+  model id, token counts, source, and modeled row cost.
+- `ModalWallClockCostSurface` is app/runtime scoped Modal billing. It may carry
+  runtime seconds, app/call ids, GPU, and dashboard reconciliation.
+
+Do not collapse Modal wall-clock cost into a per-row generation field. Consumers
+that need per-row estimates should allocate or model that explicitly and record
+the allocation source.
 
 ## Package Shape
 

@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 
+from synapt.runner.hashing import canonical_json
+from synapt.runner.modal import GenerationCostSurface
 from synapt.runner.records import FailureRecord, RecordStatus, RunRecord, RunRecordError
 
 
@@ -14,6 +18,28 @@ def test_success_record_requires_prompt_and_quality_without_failure():
     )
 
     assert record.record_status is RecordStatus.PROMPT_QUALITY_SUCCESS
+
+
+def test_success_record_carries_generation_cost_without_modal_cost():
+    record = RunRecord(
+        run_id="run-1",
+        record_status=RecordStatus.PROMPT_QUALITY_SUCCESS,
+        prompt_record={"prompt_hash": "abc"},
+        quality_record={"score": 1.0},
+        generation_cost=GenerationCostSurface(
+            cost_usd=0.0025,
+            source="provider_token_meter",
+            model_id="Qwen/Qwen3-8B",
+            prompt_tokens=1000,
+            completion_tokens=25,
+        ),
+    )
+
+    payload = json.loads(canonical_json(record))
+
+    assert payload["generation_cost"]["surface"] == "generation_row"
+    assert payload["generation_cost"]["cost_usd"] == 0.0025
+    assert "dashboard_completed_app_cost_usd" not in payload["generation_cost"]
 
 
 def test_success_record_rejects_missing_terminal_payloads():

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
 
@@ -38,6 +38,35 @@ class GpuCostRate:
 
 
 @dataclass(frozen=True)
+class GenerationCostSurface:
+    """Per-row model generation cost, not Modal wall-clock billing."""
+
+    cost_usd: float
+    source: str
+    model_id: str | None = None
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    cached_tokens: int | None = None
+    notes: tuple[str, ...] = ()
+    surface: str = "generation_row"
+
+    def __post_init__(self) -> None:
+        if self.cost_usd < 0:
+            raise ValueError("cost_usd cannot be negative")
+        for field_name in ("prompt_tokens", "completion_tokens", "cached_tokens"):
+            value = getattr(self, field_name)
+            if value is not None and value < 0:
+                raise ValueError(f"{field_name} cannot be negative")
+
+    @property
+    def total_tokens(self) -> int | None:
+        token_counts = (self.prompt_tokens, self.completion_tokens)
+        if any(value is None for value in token_counts):
+            return None
+        return sum(value for value in token_counts if value is not None)
+
+
+@dataclass(frozen=True)
 class DashboardCostReconciliation:
     modeled_cost_usd: float
     dashboard_completed_app_cost_usd: float | None = None
@@ -56,6 +85,23 @@ class DashboardCostReconciliation:
         if self.dashboard_total_cost_usd is None:
             return None
         return self.dashboard_total_cost_usd - self.modeled_cost_usd
+
+
+@dataclass(frozen=True)
+class ModalWallClockCostSurface:
+    """Modal app/runtime cost, separate from per-row generation cost."""
+
+    runtime_seconds: float
+    gpu: str
+    reconciliation: DashboardCostReconciliation | None = None
+    modal_app_id: str | None = None
+    modal_call_id: str | None = None
+    notes: tuple[str, ...] = ()
+    surface: str = "modal_wall_clock"
+
+    def __post_init__(self) -> None:
+        if self.runtime_seconds < 0:
+            raise ValueError("runtime_seconds cannot be negative")
 
 
 @dataclass(frozen=True)

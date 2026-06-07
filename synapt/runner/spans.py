@@ -52,7 +52,6 @@ def render_span_units(
 ) -> SpanRenderResult:
     render_mode = RenderMode(mode)
     selected_ids = tuple(selected_unit_ids)
-    selected_set = set(selected_ids)
     unit_by_id = {unit.unit_id: unit for unit in units}
     missing = [unit_id for unit_id in selected_ids if unit_id not in unit_by_id]
     if missing:
