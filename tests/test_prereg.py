@@ -11,7 +11,7 @@ from synapt.runner.prereg import (
 
 def test_prereg_gate_accepts_locked_method_and_version():
     gate = MethodGate.from_methods(
-        preregistration_id="config#316",
+        preregistration_id="prereg-a",
         config_version="316",
         allowed_methods=("sentence_vorn",),
     )
@@ -19,14 +19,14 @@ def test_prereg_gate_accepts_locked_method_and_version():
     assert_method_allowed(
         method="sentence_vorn",
         gate=gate,
-        runtime_preregistration_id="config#316",
+        runtime_preregistration_id="prereg-a",
         runtime_config_version="316",
     )
 
 
 def test_prereg_gate_rejects_version_drift():
     gate = MethodGate.from_methods(
-        preregistration_id="config#316",
+        preregistration_id="prereg-a",
         config_version="316",
         allowed_methods=("sentence_vorn",),
     )
@@ -35,14 +35,14 @@ def test_prereg_gate_rejects_version_drift():
         assert_method_allowed(
             method="sentence_vorn",
             gate=gate,
-            runtime_preregistration_id="config#316",
+            runtime_preregistration_id="prereg-a",
             runtime_config_version="321",
         )
 
 
 def test_prereg_gate_rejects_method_drift():
     gate = MethodGate.from_methods(
-        preregistration_id="config#316",
+        preregistration_id="prereg-a",
         allowed_methods=("sentence_vorn",),
     )
 
@@ -50,5 +50,5 @@ def test_prereg_gate_rejects_method_drift():
         assert_method_allowed(
             method="sentence_snapkv",
             gate=gate,
-            runtime_preregistration_id="config#316",
+            runtime_preregistration_id="prereg-a",
         )

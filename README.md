@@ -4,7 +4,7 @@ Shared OSS research-runner kernel for Synapt, distributed as `synapt-runner`
 with import path `synapt.runner`.
 
 This repository is the Phase 2 extraction of the runner prototype from
-`synapt-dev/config`. It is publish-readiness staged, but no PyPI release is
+a private research repository. It is publish-readiness staged, but no PyPI release is
 authorized until Layne ratifies the first release.
 
 ## Scope
