@@ -18,7 +18,7 @@ class ModalRuntimeSpec:
     app_name: str
     gpu: str = "A100-80GB"
     timeout_seconds: int = 60 * 60
-    modal_profile: str = "layne1penney"
+    modal_profile: str | None = None
     max_containers: int = 1
     volume_name: str | None = None
     volume_path: str | None = None

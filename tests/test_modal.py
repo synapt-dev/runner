@@ -119,3 +119,8 @@ def test_cost_surfaces_reject_negative_values():
 
     with pytest.raises(ValueError, match="runtime_seconds cannot be negative"):
         ModalWallClockCostSurface(runtime_seconds=-1, gpu="A100-80GB")
+
+
+def test_runtime_spec_names_no_profile_by_default():
+    assert ModalRuntimeSpec(app_name="app").modal_profile is None
+    assert ModalRuntimeSpec(app_name="app", modal_profile="mine").modal_profile == "mine"
